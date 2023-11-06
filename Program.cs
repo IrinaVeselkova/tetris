@@ -234,46 +234,60 @@ for (int i = 0; i < 1000; i++)
             break;
 
         case "f":
-            Console.Clear();
-            colPosition++;
-            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
-            PrintElement(gameSpace);
-
-            ClearGameSpace(gameSpace);
-            if (colPosition == 10)
+            if (colPosition == 11 - tetrisElementLines[random].GetLength(1))
             {
-                goto case "a";
+                ClearGameSpace(gameSpace);
+            }
+            else
+            {
+                Console.Clear();
+                colPosition++;
+                gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+                PrintElement(gameSpace);
+                ClearGameSpace(gameSpace);
+            }
+            if (rowPosition == (21 - tetrisElementLines[random].GetLength(0)))
+            {
+                goto default;
             }
             break;
         case "a":
-            Console.Clear();
-            colPosition--;
-            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
-            PrintElement(gameSpace);
-            ClearGameSpace(gameSpace);
             if (colPosition == 1)
             {
-                goto case "f";
+                ClearGameSpace(gameSpace);
             }
-            break;
-        case "x":
-            Console.Clear();
-            rowPosition++;
-            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
-            PrintElement(gameSpace);
+            else
+            {
+                Console.Clear();
+                colPosition--;
+                gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+                PrintElement(gameSpace);
+                ClearGameSpace(gameSpace);
+            }
             if (rowPosition == (21 - tetrisElementLines[random].GetLength(0)))
             {
-                tempGameSpace = gameSpace;
                 goto default;
             }
-            else ClearGameSpace(gameSpace);
+            break; ;
+        case "x":
+            if (rowPosition == (21 - tetrisElementLines[random].GetLength(0)))
+            {
+                goto default;
+            }
+            else
+            {
+                ClearGameSpace(gameSpace);
+                Console.Clear();
+                rowPosition++;
+                gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+                PrintElement(gameSpace);
+            }
             break;
         default:
-            tempGameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace);
             rowPosition = 1;
             colPosition = 5;
-            PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace));
-            goto case " ";
+            PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace));
+            break;
 
     }
 
