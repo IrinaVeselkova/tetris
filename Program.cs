@@ -4,7 +4,7 @@ using System;
 using System.Text;
 using System.IO;
 using System.Net.Http.Headers;
-// элементы тетриса
+// элементы тетриса (массив двумерных массивов с элементами тетриса)
 string[][,] tetrisElementLines = new string[7][,]
 {
     new string[,] { {"@"},
@@ -28,7 +28,7 @@ string[][,] tetrisElementLines = new string[7][,]
                     {"@"," "}},
     new string[,] { {"@","@"},
                     {"@","@"}}};
-//Игровое поле
+//Игровое поле (двумерный массив)
 string[,] gameSpace = new string[22, 12] { {"+","-","-","-","-","-","-","-","-","-","-","+"},
                                             {"|"," "," "," "," "," "," "," "," "," "," ","|"},
                                             {"|"," "," "," "," "," "," "," "," "," "," ","|"},
@@ -51,7 +51,11 @@ string[,] gameSpace = new string[22, 12] { {"+","-","-","-","-","-","-","-","-",
                                             {"|"," "," "," "," "," "," "," "," "," "," ","|"},
                                             {"|"," "," "," "," "," "," "," "," "," "," ","|"},
                                             {"+","-","-","-","-","-","-","-","-","-","-","+"}};
-// печать элемента тетриса
+int random = new Random().Next(0, 7);// объявление номера элемента
+int rowPosition = 1; // начальная позиция строки
+int colPosition = 5; // начальная позиция колонки
+string [,] tempGameSpace = new string[22,12];
+// печать элемента тетриса (не используется)
 void PrintElementTetris(int item, string[][,] array)
 {
     switch (item)
@@ -83,6 +87,7 @@ void PrintElementTetris(int item, string[][,] array)
     }
 
 }
+// печать массива, например с игровым полем и элементом
 void PrintElement(string[,] array)
 {
     for (int i = 0; i < array.GetLength(0); i++)
@@ -108,129 +113,171 @@ string[,] RoundElementTetris(string[,] array)
 
     return roundElement;
 }
-
 // встраивание элемента тетриса в игровое поле
 string[,] InsertTetrisElementInGameSpase(int rowPosition, int colPosition, string[,] tetrisElement, string[,] gameSpace)
 {
-    string[,] replaceGameSpase = new string[gameSpace.GetLength(0), gameSpace.GetLength(1)];
-    replaceGameSpase = gameSpace;
+
     for (int i = 0; i < tetrisElement.GetLength(0); i++)
     {
         for (int j = 0; j < tetrisElement.GetLength(1); j++)
         {
-
-            replaceGameSpase[i  + rowPosition, j + colPosition] = tetrisElement[i, j];
+            gameSpace[i + rowPosition, j + colPosition] = tetrisElement[i, j];
         }
-    }
-    return replaceGameSpase;
-}
-//Перемещение элемента вниз
-string[,] DownTetrisElementInGameSpase(int random, int rowPosition, int colPosition, string[,] gameSpace)
-{
-    for (int i = 0; i < gameSpace.GetLength(0); i++)
-    {
-        if (Console.ReadLine() == "x")
-        {
-            Console.Clear();
-            PrintElement(InsertTetrisElementInGameSpase(rowPosition++, colPosition, tetrisElementLines[random], gameSpace));
-            for (int j = 1; j < 11; j++)
-            {
-                gameSpace[rowPosition, j] = " ";
-            }
-
-        }
-
     }
     return gameSpace;
 }
-//двbгаем элемент тетриса влево
-string[,] LeftTetrisElementInGameSpase(int random, int rowPosition, int colPosition, string[,] gameSpace)
+// очищаем игровое поле
+string[,] ClearGameSpace(string[,] array)
 {
-    for (int i = 10; i < gameSpace.GetLength(1); i--)
+    string[,] gameSpace = new string[22, 12] { {"+","-","-","-","-","-","-","-","-","-","-","+"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"|"," "," "," "," "," "," "," "," "," "," ","|"},
+                                            {"+","-","-","-","-","-","-","-","-","-","-","+"}};
+    for (int i = 0; i < array.GetLength(0); i++)
     {
-        if (Console.ReadLine() == "a")
+        for (int j = 0; j < array.GetLength(1); j++)
         {
+            array[i, j] = gameSpace[i, j];
+        }
+    }
+    return array;
+}
+System.Console.WriteLine("Чтобы начать игру нажмите любую кнопку");
+gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+PrintElement(gameSpace);
+ClearGameSpace(gameSpace);
+// Программа выполнения игры
+for (int i = 0; i < 1000; i++)
+{
+    switch (Console.ReadLine())
+    {
+        case " ":
             Console.Clear();
-            PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition--, tetrisElementLines[random], gameSpace));
-            for (int j = 10; j > 1; j--)
-            {
-                for (int k = 1; k < 20; k++)
-                {
-                    gameSpace[k, j] = " ";
-                }
-            }
-        }
+            tetrisElementLines[random] = RoundElementTetris(tetrisElementLines[random]);
+            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+            PrintElement(gameSpace);
+            ClearGameSpace(gameSpace);
+            break;
 
-    }
-    return gameSpace;
-}
-//двигаем элемент вправо
-string[,] RightTetrisElementInGameSpase(int random, int rowPosition, int colPosition, string[,] gameSpace)
-{
-    for (int i = 1; i < 11; i++)
-    {
-        if (Console.ReadLine() == "f")
-        {
+        case "f":
             Console.Clear();
-            PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition++, tetrisElementLines[random], gameSpace));
-
-            for (int j = 10; j > 1; j--)
+            colPosition++;
+            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+            PrintElement(gameSpace);
+            ClearGameSpace(gameSpace);
+            if (colPosition == 10)
             {
-                for (int k = 1; k < 20; k++)
-                {
-                    gameSpace[k, j] = " ";
-                }
+            goto case "a";
             }
-        }
+            break;
+        case "a":
+            Console.Clear();
+            colPosition--;
+            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+            PrintElement(gameSpace);
+            ClearGameSpace(gameSpace);
+            if (colPosition == 1)
+            {
+            goto case "f";
+            }
+            break;
+        case "x":
+            Console.Clear();
+            rowPosition++;
+            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+            PrintElement(gameSpace);
+            ClearGameSpace(gameSpace);
+            if (rowPosition == 20)
+            {
+            goto default;
+            }
+            break;
+        default: 
+        gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+        tempGameSpace = gameSpace;
+        rowPosition = 1;
+        colPosition = 5;
+        random = new Random().Next(0,7);
+        PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace));
+        goto NextDirection;
 
     }
-    return gameSpace;
-}
-//Находим положение элемента на поле
-int[] FindPositionElement(string[,] gameSpace)
-{
-    int[] position = new int[2];
-    int[] positionFirst = new int[2];
-    int[] positionSecond = new int[2];
-    for (int i = 0; i < gameSpace.GetLength(0); i++)
+NextDirection:
+
+switch (Console.ReadLine())
     {
-        for (int j = 0; j < gameSpace.GetLength(1); j++)
-        {
-            if (gameSpace[i, j] == "@")
+        case " ":
+            Console.Clear();
+            tetrisElementLines[random] = RoundElementTetris(tetrisElementLines[random]);
+            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace);
+            PrintElement(gameSpace);
+            ClearGameSpace(gameSpace);
+            break;
+
+        case "f":
+            Console.Clear();
+            colPosition++;
+            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace);
+            PrintElement(gameSpace);
+            ClearGameSpace(gameSpace);
+            if (colPosition == 10)
             {
-                positionFirst[0] = i;
-                positionFirst[1] = j;
+            goto case "a";
             }
-        }
+            break;
+        case "a":
+            Console.Clear();
+            colPosition--;
+            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace);
+            PrintElement(gameSpace);
+            ClearGameSpace(gameSpace);
+            if (colPosition == 1)
+            {
+            goto case "f";
+            }
+            break;
+        case "x":
+            Console.Clear();
+            rowPosition++;
+            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace);
+            PrintElement(gameSpace);
+            ClearGameSpace(gameSpace);
+            if (rowPosition == 16)
+            {
+            goto default;
+            }
+            break;
+        default: 
+        gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace);
+        tempGameSpace = gameSpace;
+        rowPosition = 1;
+        colPosition = 5;
+        random = new Random().Next(0,7);
+        PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], tempGameSpace));
+        break;
+
     }
-                for (int k = positionFirst[0]+1; k < gameSpace.GetLength(0); k++)
-                {
-                    for (int m = 0; m < gameSpace.GetLength(1); m++)
-                    {
-                        if (gameSpace[k, m] == "@")
-                        {
-                            positionSecond[0] = k;
-                            positionSecond[1] = m;
-                        }
-                    }
-                }
-    if (positionSecond[0] >= positionFirst[0] )
-    {
-        position[0] = positionSecond[0] - (positionSecond[0] - positionFirst[0]);
-        position[1] = positionSecond[1];
-       
-    }
-    else
-    {
-        position[0] = positionFirst[0];
-        position[1] = positionFirst[1];
-    }
-    return position;
+
 }
-int random = new Random().Next(0, 7);
-PrintElement(InsertTetrisElementInGameSpase(1, 5, tetrisElementLines[random], gameSpace));
-//DownTetrisElementInGameSpase(random,1, 5, gameSpace);
-//LeftTetrisElementInGameSpase(random, 1, 5, gameSpace);
-//RightTetrisElementInGameSpase(random, 1, 5, gameSpace);
-int[] position = FindPositionElement(InsertTetrisElementInGameSpase(1, 5, tetrisElementLines[random], gameSpace));
-System.Console.WriteLine($"{position[0]},{position[1]}");
+
+
+
+
