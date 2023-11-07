@@ -53,39 +53,7 @@ string[,] gameSpace = new string[22, 12] { {"+","-","-","-","-","-","-","-","-",
 int random = new Random().Next(0, 7);// объявление номера элемента
 int rowPosition = 1; // начальная позиция строки
 int colPosition = 5; // начальная позиция колонки
-string[,] tempGameSpace = new string[22, 12];
-// печать элемента тетриса (не используется)
-void PrintElementTetris(int item, string[][,] array)
-{
-    switch (item)
-    {
-        case 0:
-            PrintElement(array[0]);
-            break;
-        case 1:
-            PrintElement(array[1]);
-            break;
-        case 2:
-            PrintElement(array[2]);
-            break;
-        case 3:
-            PrintElement(array[3]);
-            break;
-        case 4:
-            PrintElement(array[4]);
-            break;
-        case 5:
-            PrintElement(array[5]);
-            break;
-        case 6:
-            PrintElement(array[6]);
-            break;
-        default:
-            PrintElement(array[7]);
-            break;
-    }
 
-}
 // печать массива, например с игровым полем и элементом
 void PrintElement(string[,] array)
 {
@@ -159,78 +127,25 @@ string[,] ClearGameSpace(string[,] array)
     }
     return array;
 }
-// метод запуска первого элемента
-void SwitchGameSpace(int rowPosition, int colPosition, string[,] tetrisElementLines, string[,] gameSpace)
-{
-    switch (Console.ReadLine())
-    {
-        case " ":
-            Console.Clear();
-            tetrisElementLines = RoundElementTetris(tetrisElementLines);
-            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines, gameSpace);
-            PrintElement(gameSpace);
-            ClearGameSpace(gameSpace);
-            break;
 
-        case "f":
-            Console.Clear();
-            colPosition++;
-            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines, gameSpace);
-            PrintElement(gameSpace);
-            ClearGameSpace(gameSpace);
-            if (colPosition == 10)
-            {
-                goto case "a";
-            }
-            break;
-        case "a":
-            Console.Clear();
-            colPosition--;
-            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines, gameSpace);
-            PrintElement(gameSpace);
-            ClearGameSpace(gameSpace);
-            if (colPosition == 1)
-            {
-                goto case "f";
-            }
-            break;
-        case "x":
-            Console.Clear();
-            rowPosition++;
-            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines, gameSpace);
-            PrintElement(gameSpace);
-            ClearGameSpace(gameSpace);
-            if (rowPosition == 20)
-            {
-                goto default;
-            }
-            break;
-        default:
-            gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines, gameSpace);
-            tempGameSpace = gameSpace;
-            rowPosition = 1;
-            colPosition = 5;
-            PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines, tempGameSpace));
-            goto case " ";
-
-    }
-}
 Console.WriteLine("Чтобы начать игру нажмите любую кнопку");
 gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
 PrintElement(gameSpace);
 ClearGameSpace(gameSpace);
+int n = 1000;
+string[,] newGameSpace = new string[22, 12];
 //Программа выполнения игры
-for (int i = 0; i < 1000; i++)
+for (int i = 0; i < n; i++)
 {
 
     switch (Console.ReadLine())
     {
         case " ":
+            ClearGameSpace(gameSpace);
             Console.Clear();
             tetrisElementLines[random] = RoundElementTetris(tetrisElementLines[random]);
             gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
             PrintElement(gameSpace);
-            ClearGameSpace(gameSpace);
             break;
 
         case "f":
@@ -240,17 +155,19 @@ for (int i = 0; i < 1000; i++)
             }
             else
             {
+                ClearGameSpace(gameSpace);
                 Console.Clear();
                 colPosition++;
                 gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
                 PrintElement(gameSpace);
-                ClearGameSpace(gameSpace);
             }
             if (rowPosition == (21 - tetrisElementLines[random].GetLength(0)))
             {
+                Console.Clear();
                 rowPosition = 1;
                 colPosition = 5;
                 PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace));
+                i = n;
             }
             break;
         case "a":
@@ -260,26 +177,29 @@ for (int i = 0; i < 1000; i++)
             }
             else
             {
+                ClearGameSpace(gameSpace);
                 Console.Clear();
                 colPosition--;
                 gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
                 PrintElement(gameSpace);
-                ClearGameSpace(gameSpace);
             }
             if (rowPosition == (21 - tetrisElementLines[random].GetLength(0)))
             {
+                Console.Clear();
                 rowPosition = 1;
                 colPosition = 5;
                 PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace));
-                
+                i = n;
             }
-            break; 
+            break;
         case "x":
             if (rowPosition == (21 - tetrisElementLines[random].GetLength(0)))
             {
+                Console.Clear();
                 rowPosition = 1;
                 colPosition = 5;
                 PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace));
+                i = n;
             }
             else
             {
@@ -293,7 +213,7 @@ for (int i = 0; i < 1000; i++)
         default:
             break;
     }
-   
+
 
 }
 
