@@ -203,23 +203,43 @@ for (int i = 0; i < n; i++)
             }
             break;
         case ConsoleKey.PageDown:
-            if (rowPosition == (21 - tetrisElementLines[random].GetLength(0)) || gameSpace[rowPosition + tetrisElementLines[random].GetLength(0), colPosition] == "@" && tetrisElementLines[random][tetrisElementLines[random].GetLength(0)-1, 0] == "@")
+            for (int j = colPosition; j < colPosition + tetrisElementLines[random].GetLength(1);)
+            {
+                if (gameSpace[rowPosition + tetrisElementLines[random].GetLength(0), j] !="@" && gameSpace[rowPosition + tetrisElementLines[random].GetLength(0)-1, j] != "@")
+                {
+                    j++;
+                    OutTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+                    Console.Clear();
+                    rowPosition++;
+                    gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
+                    PrintElement(gameSpace);
+                }
+                else
+                {
+                    Console.Clear();
+                    rowPosition = 1;
+                    colPosition = 5;
+                    PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace));
+                    random = new Random().Next(0, 7);
+                    break;
+                }
+            }
+            if (rowPosition == (21 - tetrisElementLines[random].GetLength(0)))
             {
                 Console.Clear();
                 rowPosition = 1;
                 colPosition = 5;
                 PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace));
                 random = new Random().Next(0, 7);
-                //for (int j = colPosition; j < colPosition+tetrisElementLines[random].GetLength(1); j++)
-
+                break;
             }
             else
             {
-                OutTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
                 Console.Clear();
-                rowPosition++;
-                gameSpace = InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace);
-                PrintElement(gameSpace);
+                rowPosition = 1;
+                colPosition = 5;
+                PrintElement(InsertTetrisElementInGameSpase(rowPosition, colPosition, tetrisElementLines[random], gameSpace));
+                random = new Random().Next(0, 7);
             }
             break;
         default:
